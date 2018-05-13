@@ -67,7 +67,7 @@ function createChannel(cname){
       },
       "2" : {
         "body" : "はじめてのメッセージを投稿してみましょう。",
-        "date" : "${date1.toJSON()}",
+        "date" : "${date2.toJSON()}",
         "user" : {
           "avatar" : "",
           "id" : "robot",
@@ -84,4 +84,20 @@ app.post('/channels', (req, res) => {
   createChannel(cname);
   res.header('Content-Type', 'application/json; charset=utf-8');
   req.statusCode(201).json({result: 'ok'});
+});
+
+// チェンネル一覧の取得
+app.get('/channels', (req, res) => {
+  let channelsRef = admin.database().ref('channels');
+  // データの読み出しは、valueイベントを使う
+  // onceで1回だけコールバックする
+  channelsRef.once('value', function(snapshot) {
+    let items = new Array();
+    snapshot.forEach(function(childSnapshot) {
+      let cname = childSnapshot.key;
+      items.push(cname)
+    });
+    res.header('Content-Type', 'application/json; charset=utf-8');
+    res.send({channels: items});
+  })
 });
