@@ -101,3 +101,20 @@ app.get('/channels', (req, res) => {
     res.send({channels: items});
   })
 });
+
+// メッセージの追加
+// :cnameでこの位置にある値(チャンネル名)をreq.params.cnameにセットする
+app.post('/channels/:cname/messages', (req, res) => {
+  // チェンネル名を取得する
+  let cname = req.params.cname;
+  let message = {
+    date: new Date().toJSON(),
+    body: req.body.body,
+    user: req.user
+  };
+  let messagesRef = admin.database().ref(`channels/${cname}/messages`);
+  // パスにmessageオブジェクトをセットする
+  messagesRef.push(message);
+  res.header('Content-Type', 'application/json; charset=utf-8');
+  res.status(201).send({result: "ok"});
+});
