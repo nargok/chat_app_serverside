@@ -137,3 +137,11 @@ app.get('/channels/:cname/messages', (req, res) => {
   res.send({messages: items});
  });
 });
+
+// リセット
+app.post('/reset', (req, res) => {
+  createChannel('general');
+  createChannel('random');
+  res.header('Content-Type', 'application/json; charset=utf-8');
+  res.status(201).send({result: "ok"});
+});
