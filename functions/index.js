@@ -83,7 +83,7 @@ app.post('/channels', (req, res) => {
   let cname = req.body.cname;
   createChannel(cname);
   res.header('Content-Type', 'application/json; charset=utf-8');
-  req.statusCode(201).json({result: 'ok'});
+  res.status(201).json({result: 'ok'});
 });
 
 // チェンネル一覧の取得
