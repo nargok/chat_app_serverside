@@ -145,3 +145,5 @@ app.post('/reset', (req, res) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   res.status(201).send({result: "ok"});
 });
+
+exports.v1 = functions.https.onRequest(app);
