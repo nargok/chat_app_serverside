@@ -118,3 +118,22 @@ app.post('/channels/:cname/messages', (req, res) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   res.status(201).send({result: "ok"});
 });
+
+// メッセージ一覧の取得
+app.get('/channels/:cname/messages', (req, res) => {
+ let cname = req.params.cname;
+ // dateキーで並べ替え、最後から20件を取得する
+ let messagesRef = admin.database().ref(`channels/${cname}/messages`).orderByChild(`date`).limitToLast(20);
+ messagesRef.once('value', function(snapshot) {
+  let items = new Array();
+  snapshot.forEach(function(childSnapshot) {
+    let message = childSnapshot.val();
+    message.id = childSnapshot.key;
+    items.push(message);
+  });
+  // 日付の降順になっているので昇順に変える
+  items.reverse();
+  res.header('Content-Type', 'application/json; charset=utf-8');
+  res.send({messages: items});
+ });
+});
